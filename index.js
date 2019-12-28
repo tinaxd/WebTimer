@@ -24,6 +24,9 @@ function count() {
 function checkTimerEnd() {
   if (timerStatus.currSecond == 0) {
     timerStatus.running = false;
+    if (timerStatus.handler) {
+      clearInterval(timerStatus.handler);
+    }
   }
 }
 
@@ -49,16 +52,21 @@ function stopTimer() {
 function resetTimer() {
   timerStatus.currSecond = timerStatus.initTarget;
   timerStatus.running = false;
+  if (timerStatus.handler) {
+    clearInterval(timerStatus.handler);
+  }
   updateView();
 }
 
 function changeTimerMode() {
   timerStatus.mode = 'timer';
+  resetTimer();
   buttonUpdate('timer');
 }
 
 function changeStopwatchMode() {
   timerStatus.mode = 'stopwatch';
+  resetTimer();
   buttonUpdate('stopwatch');
 }
 
