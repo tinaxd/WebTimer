@@ -1,0 +1,25 @@
+.switch-enabled {
+    background-color: #bffa9b;
+    color: #1a3536;
+}
+
+.switch-disabled {
+    background-color: #bffa9b;
+    color: #989a9c;
+}
+
+.timer {
+    text-align: center;
+    background-color: #dedede;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    width: 80%;
+    margin-top: 5%;
+}
+
+.timer-display {
+    text-align: inherit;
+    color: black;
+    font-size: xx-large;
+}
