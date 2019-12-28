@@ -9,11 +9,20 @@
     <div class="timer">
         <button class="switch-enabled" id="timerModeBtn" onclick="changeTimerMode()">Timer</button>
         <button class="switch-disabled" id="stopwatchModeBtn" onclick="changeStopwatchMode()">Stopwatch</button>
-        <p class="timer-display" id="timerDisplay">30:30</p>
+        <p class="timer-display" id="timerDisplay" onclick="openTargetModal()">30:00</p>
         <button class="switch-enabled" onclick="startTimer()">Start</button>
         <button class="switch-enabled" onclick="stopTimer()">Stop</button>
         <button class="switch-enabled" onclick="resetTimer()">Reset</button>
         <br><button class="switch-enabled" onclick="stopSound()">Stop sounds</button>
     </div>
+    <div class="modal" id="myModal">
+        <div class="modal-content">
+            <input type="text" id="minuteForm">:<input type="text" id="secondForm">
+            <br><button class="switch-enabled" onclick="applyTargetModal()">Set!</button>
+        </div>
+    </div>
+    <footer>
+        <a href="https://github.com/tinaxd/WebTimer">source</a>
+    </footer>
 </body>
 </html>

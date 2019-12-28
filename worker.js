@@ -1,9 +1,9 @@
 let timerStatus = {
   mode: 'timer',
   handler: null,
-  currSecond: 0,
+  currSecond: 180,
   running: false,
-  initTarget: 0
+  initTarget: 180
 };
 
 function notifyViewChange() {
@@ -36,8 +36,8 @@ function checkTimerEnd() {
 }
 
 function setTarget(target) {
-  resetTimer();
   timerStatus.initTarget = target;
+  resetTimer();
 }
 
 function startTimer() {
