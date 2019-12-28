@@ -1,72 +1,37 @@
-let timerStatus = {
-  mode: 'timer',
-  handler: null,
-  currSecond: 0,
-  running: false,
-  initTarget: 0
-};
-
 let timerModeBtn;
 let stopwatchModeBtn;
 let timerDisplay;
 
-function count() {
-  if (!timerStatus.running) return;
-  if (timerStatus.mode === 'stopwatch') {
-    timerStatus.currSecond++;
-  } else {
-    timerStatus.currSecond--;
-    checkTimerEnd();
-  }
-  updateView();
-}
+let timerWorker;
 
-function checkTimerEnd() {
-  if (timerStatus.currSecond == 0) {
-    timerStatus.running = false;
-    if (timerStatus.handler) {
-      clearInterval(timerStatus.handler);
-    }
-  }
-}
 
-function updateView() {
-  const minute = ('00' + Math.floor(timerStatus.currSecond / 60)).slice(-2);
-  const second = ('00' + timerStatus.currSecond % 60).slice(-2);
+function updateView(currSecond) {
+  const minute = ('00' + Math.floor(currSecond / 60)).slice(-2);
+  const second = ('00' + currSecond % 60).slice(-2);
   timerDisplay.innerHTML = minute + ':' + second;
 }
 
 function startTimer() {
-  if (timerStatus.running) return;
-  timerStatus.handler = setInterval(count, 1000);
-  timerStatus.running = true;
+  timerWorker.postMessage({type: 'startTimer'});
 }
 
 function stopTimer() {
-  if (timerStatus.handler) {
-    clearInterval(timerStatus.handler);
-  }
-  timerStatus.running = false;
+  timerWorker.postMessage({type: 'stopTimer'});
 }
 
 function resetTimer() {
-  timerStatus.currSecond = timerStatus.initTarget;
-  timerStatus.running = false;
-  if (timerStatus.handler) {
-    clearInterval(timerStatus.handler);
-  }
-  updateView();
+  timerWorker.postMessage({type: 'resetTimer'});
 }
 
 function changeTimerMode() {
-  timerStatus.mode = 'timer';
-  resetTimer();
+  postMessage({type: 'setMode', mode: 'timer'});
+  timerWorker.postMessage({type: 'setMode', mode: 'timer'});
   buttonUpdate('timer');
 }
 
 function changeStopwatchMode() {
-  timerStatus.mode = 'stopwatch';
-  resetTimer();
+  postMessage({type: 'setMode', mode: 'stopwatch'});
+  timerWorker.postMessage({type: 'setMode', mode: 'stopwatch'});
   buttonUpdate('stopwatch');
 }
 
@@ -81,8 +46,33 @@ function buttonUpdate(enabledMode) {
   disabledBtn.classList.add('switch-disabled');
 }
 
+function stopSound() {
+
+}
+
 window.onload = () => {
   timerModeBtn = document.getElementById('timerModeBtn');
   stopwatchModeBtn = document.getElementById('stopwatchModeBtn');
   timerDisplay = document.getElementById('timerDisplay');
+
+  if (window.Worker) {
+    timerWorker = new Worker('worker.js');
+
+    timerWorker.onmessage = function(msg) {
+      switch (msg.data.type) {
+        case 'timerReachedTarget':
+          // TODO: do something
+          break;
+        
+        case 'viewUpdate':
+          updateView(msg.data.currSecond);
+      }
+    };
+
+    timerWorker.onerror = function(err) {
+      console.log(err);
+    }
+  } else {
+    alert("This app doesn't work on your browser! Please try a different browser.");
+  }
 }
